@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sea Kayak Check-list AKC PRO v2</title>
+<style>
+body {font-family:Arial;background:#e6edf5;color:#0f172a;margin:0;padding:10px;}
+.header{text-align:center;margin-bottom:10px;}
+.header img{max-width:120px;}
+h1{margin:5px 0;font-size:20px;}
+.section{background:#fff;margin-bottom:10px;border-radius:12px;overflow:hidden;box-shadow:0 2px 6px rgba(0,0,0,0.1);}
+.section-header{padding:12px;font-weight:bold;cursor:pointer;background:#cbd5e1;}
+.section-content{display:none;padding:10px;background:#f1f5f9;}
+.item-row{display:flex;justify-content:space-between;margin:5px 0;}
+label.main{flex:1;}
+.pos{display:flex;gap:4px;}
+.pos label{font-size:10px;border:1px solid #999;border-radius:4px;padding:2px;display:flex;flex-direction:column;align-items:center;}
+.pos input{margin-bottom:2px;}
+input, textarea{width:100%;margin:3px 0;padding:5px;border-radius:5px;border:1px solid #ccc;}
+button{padding:10px;margin:5px;border:none;border-radius:8px;background:#2563eb;color:white;}
+.day{background:#e2e8f0;padding:8px;margin-top:5px;border-radius:8px;}
+.meal{font-size:12px;margin-top:6px;font-weight:bold;}
+.footer{margin-top:15px;font-size:12px;text-align:center;color:#334155;}
+
+@media print {
+ body {background:white;color:black;}
+ button {display:none;}
+ .section {box-shadow:none;border:1px solid #ccc;}
+ .section-content {display:block !important;}
+}
+</style>
+<link rel="manifest" href="manifest.json?v=2">
+</head>
+<body>
+
+<div class="header">
+<img src="icon-192-v2.png" style="width:120px;">
+<h1>Sea Kayak Check-list AKC PRO</h1>
+</div>
+
+<div>
+<button onclick="saveData()">💾 Salva</button>
+<button onclick="resetData()">♻️ Reset</button>
+<button onclick="printChecklist()">🖨️ Stampa</button>
+<button onclick="shareChecklist()">📤 Condividi</button>
+<button onclick="exportPDF()">📄 PDF</button>
+
+</div>
+
+
+<div id="app"></div>
+
+<div class="footer">
+Tutto il materiale che non deve bagnarsi deve essere riposto nelle apposite sacche stagne.
+</div>
+
+<script>
+
+const positions=["GA","PH","DH","GP"];
+
+const data={
+"EQUIPAGGIAMENTO INDOSSATO":["PFD","Paraspruzzi","Muta stagna / Neoprene","Sottomuta","Calzari","Guanti o Moffole","Coltello rescue","Orologio","Fischietto","InReach","VHF","Leash pagaia","Occhiali da sole","Cappello con visiera","Snack"],
+"PONTE KAYAK":["Pagaia principale","Pagaia di rispetto","Pompa di sentina/Sassola","Spugna","Paddle float","Cima traino","Contact line","Casco","Bussola","Carta nautica","Corno da nebbia"],
+"SISTEMA NOTTE":["Tenda/Tarp","Cordini","Pali","Picchetti","Materassino","Sacco a pelo","Cuscino","Bivi bag","Sacco letto"],
+"VESTITI DI RICAMBIO":["Intimo","Baselayer","Midlayer","Giacca calda","Calze","Cappello di lana","Guanti di lana","Scarpe"],
+"CUCINA":["Fornellino","Pentola","Posate","Tazza","Caffettiera","Carburante fornello","Spugna pulizia"],
+"SISTEMA ACQUA":["Taniche","Borracce","Filtro acqua","Pastiglie purificatrici","Camel bag"],
+"SICUREZZA":["Kit primo soccorso","Kit Igiene","Telefono in sacca stagna","Kit riparazione kayak","Kit riparazione oggetti","Luce frontale","Luci navigazione notturna","Power bank","Batterie","Cavi ricarica","Leatherman o Victorinox","Accendino","Crema solare","Sacchetti robusti","Sacche stagne","Poncho","Carta Igienica","Sapone Biodegradabile","Asciugamani"],
+"SISTEMA FUOCO / ATTREZZI":["Segaccio","Accetta","Acciarino","Inneschi","Coltello","Paletta"]
+};
+
+function loadData(){return JSON.parse(localStorage.getItem("checklist"))||{};}
+
+function saveData(){
+ let saved={};
+ document.querySelectorAll("input,textarea").forEach(i=>{
+  saved[i.id]= i.type==="checkbox"? i.checked : i.value;
+ });
+ localStorage.setItem("checklist",JSON.stringify(saved));
+ alert("Salvato 👍");
+}
+
+function resetData(){
+ if(confirm("Vuoi resettare tutto?")){
+  localStorage.clear();
+  location.reload();
+ }
+}
+
+function toggle(el){
+ let c=el.nextElementSibling;
+ c.style.display=c.style.display==="block"?"none":"block";
+}
+
+function renderSection(app,name,items,saved){
+ let div=document.createElement("div");div.className="section";
+ let h=document.createElement("div");h.className="section-header";h.innerText=name;h.onclick=()=>toggle(h);
+ div.appendChild(h);
+ let c=document.createElement("div");c.className="section-content";
+
+ items.forEach(item=>{
+  let row=document.createElement("div");row.className="item-row";
+  let label=document.createElement("label");label.className="main";
+  let id=name+"_"+item;
+
+  let cb=document.createElement("input");cb.type="checkbox";cb.id=id;
+  if(saved[id])cb.checked=true;
+  label.appendChild(cb);label.append(" "+item);
+
+  let pos=document.createElement("div");pos.className="pos";
+  positions.forEach(p=>{
+    let pid=id+"_"+p;
+    let pl=document.createElement("label");
+    let pcb=document.createElement("input");pcb.type="checkbox";pcb.id=pid;
+    if(saved[pid])pcb.checked=true;
+    pl.appendChild(pcb);
+    let t=document.createElement("span");t.innerText=p;
+    pl.appendChild(t);
+    pos.appendChild(pl);
+  });
+
+  row.appendChild(label);
+  row.appendChild(pos);
+  c.appendChild(row);
+ });
+
+ div.appendChild(c);
+ app.appendChild(div);
+ return c;
+}
+
+function printChecklist(){window.print();}
+
+function render(){
+ const app=document.getElementById("app");
+ app.innerHTML="";
+ const saved=loadData();
+
+ for(let s in data){
+  renderSection(app,s,data[s],saved);
+ }
+
+ // CIBO
+ let food=document.createElement("div");food.className="section";
+ let fh=document.createElement("div");fh.className="section-header";fh.innerText="CIBO";fh.onclick=()=>toggle(fh);
+ food.appendChild(fh);
+ let fc=document.createElement("div");fc.className="section-content";
+ for(let i=1;i<=7;i++){
+  let d=document.createElement("div");d.className="day";d.innerHTML="<b>Giorno "+i+"</b>";
+  ["Colazione","Pranzo","Cena"].forEach(m=>{
+    let l=document.createElement("div");l.className="meal";l.innerText=m;
+    let inp=document.createElement("input");inp.id="food_"+i+"_"+m;
+    if(saved[inp.id])inp.value=saved[inp.id];
+    d.appendChild(l);d.appendChild(inp);
+  });
+  fc.appendChild(d);
+ }
+ food.appendChild(fc);app.appendChild(food);
+
+ // METEO
+ let met=document.createElement("div");met.className="section";
+ let mh=document.createElement("div");mh.className="section-header";mh.innerText="METEO";mh.onclick=()=>toggle(mh);
+ met.appendChild(mh);
+ let mc=document.createElement("div");mc.className="section-content";
+ for(let i=1;i<=7;i++){
+  let d=document.createElement("div");d.className="day";d.innerHTML="<b>Giorno "+i+"</b>";
+  ["Mattina","Pomeriggio","Sera"].forEach(m=>{
+    let l=document.createElement("div");l.className="meal";l.innerText=m;
+    let inp=document.createElement("input");inp.id="meteo_"+i+"_"+m;
+    if(saved[inp.id])inp.value=saved[inp.id];
+    d.appendChild(l);d.appendChild(inp);
+  });
+  mc.appendChild(d);
+ }
+ met.appendChild(mc);app.appendChild(met);
+
+ // ALTRO
+ let otherItems = saved["ALTRO_list"] ? JSON.parse(saved["ALTRO_list"]) : [];
+ let otherContent = renderSection(app,"ALTRO",otherItems,saved);
+
+ let input=document.createElement("input");input.placeholder="Aggiungi elemento...";
+ let btn=document.createElement("button");btn.innerText="Aggiungi";
+ btn.onclick=function(){
+  if(input.value){
+    otherItems.push(input.value);
+    localStorage.setItem("checklist",JSON.stringify({...saved,"ALTRO_list":JSON.stringify(otherItems)}));
+    render();
+  }
+ };
+ otherContent.appendChild(input);otherContent.appendChild(btn);
+
+ 
+// KIT PRIMO SOCCORSO
+let kit=document.createElement("div");kit.className="section";
+let kh=document.createElement("div");kh.className="section-header";kh.innerText="KIT PRIMO SOCCORSO";kh.onclick=()=>toggle(kh);
+kit.appendChild(kh);
+let kc=document.createElement("div");kc.className="section-content";
+
+for(let i=1;i<=10;i++){
+ let inp=document.createElement("input");
+ inp.placeholder="Medicinale "+i;
+ inp.id="kit_"+i;
+ if(saved[inp.id])inp.value=saved[inp.id];
+ kc.appendChild(inp);
+}
+
+kit.appendChild(kc);
+app.appendChild(kit);
+
+// NOTE
+ let note=document.createElement("div");note.className="section";
+ let nh=document.createElement("div");nh.className="section-header";nh.innerText="NOTE";nh.onclick=()=>toggle(nh);
+ note.appendChild(nh);
+ let nc=document.createElement("div");nc.className="section-content";
+ let ta=document.createElement("textarea");ta.id="notes";
+ if(saved["notes"])ta.value=saved["notes"];
+ nc.appendChild(ta);
+ note.appendChild(nc);
+ app.appendChild(note);
+}
+
+render();function exportPDF() {
+
+  const saved = JSON.parse(localStorage.getItem("checklist")) || {};
+  let content = "<h1>Sea Kayak Checklist AKC</h1>";
+
+  content += "<h2>Materiale selezionato</h2><ul>";
+
+  for (let key in saved) {
+    if (saved[key] === true) {
+      content += "<li>" + key.replaceAll("_"," ") + "</li>";
+    }
+  }
+
+  content += "</ul>";
+
+  content += "<p><b>Link app:</b><br>https://michelenapione-sketch.github.io/Seakayak-AKC-Checklist/</p>";
+
+  // apre finestra stampa
+  let win = window.open('', '', 'width=800,height=600');
+  win.document.write(`
+    <html>
+    <head>
+      <title>Checklist Kayak</title>
+      <style>
+        body { font-family: Arial; padding:20px; }
+        h1 { color:#2563eb; }
+        li { margin-bottom:5px; }
+      </style>
+    </head>
+    <body>
+      ${content}
+    </body>
+    </html>
+  `);
+
+  win.document.close();
+  win.print();
+}
+function shareChecklist() {
+
+  const saved = JSON.parse(localStorage.getItem("checklist")) || {};
+  let text = "🛶 Sea Kayak Checklist AKC\n\n";
+
+  for (let key in saved) {
+    if (saved[key] === true) {
+      text += "✔️ " + key.replaceAll("_"," ") + "\n";
+    }
+  }
+
+  text += "\n🔗 App:\nhttps://michelenapione-sketch.github.io/Seakayak-AKC-Checklist/";
+
+  if (navigator.share) {
+    navigator.share({
+      title: "Checklist Kayak",
+      text: text
+    });
+  } else {
+    navigator.clipboard.writeText(text);
+    alert("Checklist copiata!");
+  }
+}
+
+</script>
+</body>
+</html>
