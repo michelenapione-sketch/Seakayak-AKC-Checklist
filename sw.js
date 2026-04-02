@@ -1,6 +1,6 @@
 self.addEventListener('install', e => {
  e.waitUntil(
-   caches.open('akc-cache-v2').then(cache => {
+   caches.open('akc-cache-v3').then(cache => {
      return cache.addAll(['index.html']);
    })
  );
