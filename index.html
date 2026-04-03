@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AKC SEAKAYAK EXPEDITIONS PLANS</title>
+<style>
+:root{--akc-blue:#0369a1;--emergency-red:#dc2626;}
+
+body {font-family:Arial;background:#e6edf5;color:#0f172a;margin:0;padding:10px;}
+.header{text-align:center;margin-bottom:10px;}
+.header img{max-width:120px;}
+h1{margin:5px 0;font-size:20px; color:#0369a1;}
+.section{background:#fff;margin-bottom:10px;border-radius:12px;overflow:hidden;box-shadow:0 2px 6px rgba(0,0,0,0.1);}
+.section-header{padding:12px;font-weight:bold;cursor:pointer;background:#cbd5e1;color:var(--akc-blue);}
+.section-content{display:none;padding:10px;background:#f1f5f9;}
+.item-row{display:flex;justify-content:space-between;margin:5px 0;}
+label.main{flex:1;}
+.pos{display:flex;gap:4px;}
+.pos label{font-size:10px;border:1px solid #999;border-radius:4px;padding:2px;display:flex;flex-direction:column;align-items:center;}
+.pos input{margin-bottom:2px;}
+input, textarea{width:100%;margin:3px 0;padding:5px;border-radius:5px;border:1px solid #ccc;}
+button{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:8px 10px;
+  margin:4px;
+  border-radius:8px;
+  border:1px solid var(--akc-blue);
+  background:white;
+  color:var(--akc-blue);
+  font-size:13px;
+  cursor:pointer;
+  transition:all 0.2s ease;
+}
+button:hover{
+  background:var(--akc-blue);
+  color:white;
+}
+button i{
+  width:16px;
+  height:16px;
+}
+.day{background:#e2e8f0;padding:8px;margin-top:5px;border-radius:8px;}
+.meal{font-size:12px;margin-top:6px;font-weight:bold;}
+.footer{margin-top:15px;font-size:12px;text-align:center;color:#334155;}
+
+/* Contatti emergenza */
+.emergency-section {
+  background: #fff0f0;
+  border-left: 5px solid var(--emergency-red);
+}
+.contact-card {
+  background: white;
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+.contact-info {
+  flex: 2;
+  min-width: 150px;
+}
+.contact-name {
+  font-weight: bold;
+  font-size: 16px;
+}
+.contact-detail {
+  font-size: 12px;
+  color: #475569;
+  font-family: monospace;
+}
+.contact-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.btn-emergency {
+  background: var(--emergency-red);
+  border-color: var(--emergency-red);
+  color: white;
+}
+.btn-emergency:hover {
+  background: #b91c1c;
+}
+.btn-sat {
+  background: #1e3a8a;
+  border-color: #1e3a8a;
+  color: white;
+}
+.btn-sat:hover {
+  background: #1e40af;
+}
+.sat-note {
+  font-size: 11px;
+  background: #fef9c3;
+  padding: 6px;
+  border-radius: 6px;
+  margin-top: 8px;
+  text-align: center;
+}
+.gavone-item {
+  background: #f8fafc;
+  padding: 6px 10px;
+  margin: 5px 0;
+  border-radius: 8px;
+  font-size: 13px;
+  border-left: 3px solid var(--akc-blue);
+}
+
+/* Mappa rotte */
+.route-container {
+  background: white;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+.route-header {
+  padding: 12px;
+  font-weight: bold;
+  background: #1e3a8a;
+  color: white;
+  cursor: pointer;
+}
+.route-content {
+  padding: 10px;
+  background: #f1f5f9;
+}
+#routeMap {
+  height: 480px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  background: #a8c8e8;
+  border: 1px solid #94a3b8;
+}
+.route-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0;
+}
+.waypoint-list {
+  background: white;
+  border-radius: 8px;
+  padding: 10px;
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #cbd5e1;
+}
+.waypoint-item {
+  padding: 6px;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.distance-info {
+  background: #e0f2fe;
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 10px;
+  font-weight: bold;
+}
+.saved-routes {
+  margin-top: 10px;
+}
+.route-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #e2e8f0;
+  padding: 4px 8px;
+  border-radius: 16px;
+  margin: 3px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.route-chip:hover {
+  background: var(--akc-blue);
+  color: white;
+}
+.route-chip button:hover {
+  background: #b91c1c;
+  color: white;
+}
+.gps-coords {
+  background: #1e3a8a;
+  color: white;
+  padding: 8px;
+  border-radius: 8px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  font-family: monospace;
+  text-align: center;
+}
+
+@media print {
+ body {background:white;color:black;}
+ button {display:none;}
+ .section {box-shadow:none;border:1px solid #ccc;}
+ .section-content {display:block !important;}
+ #routeMap {border:1px solid #ccc; height:300px;}
+}
+
+.section-header i {
+  width:18px;
+  height:18px;
+  margin-right:8px;
+  stroke:var(--akc-blue);
+}
+
+.user-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #e2e8f0;
+  border-radius: 24px;
+  padding: 4px 8px 4px 12px;
+  margin: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+.user-chip.active {
+  background: var(--akc-blue);
+  color: white;
+}
+.user-chip.active button {
+  color: white;
+  border-color: white;
+}
+.user-chip button {
+  background: transparent;
+  border: 1px solid #94a3b8;
+  padding: 2px 6px;
+  margin: 0;
+  font-size: 11px;
+  border-radius: 20px;
+}
+.user-chip button:hover {
+  background: #dc2626;
+  border-color: #dc2626;
+  color: white;
+}
+</style>
+<link rel="manifest" href="manifest.json?v=2">
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+</head>
+<body>
+
+<div class="header">
+<img src="icon-192-v3.png" style="width:120px;">
+<h1>AKC SEAKAYAK EXPEDITIONS PLANS</h1>
+</div>
+
+<div>
+<button onclick="saveData()"><i data-lucide="save"></i>Salva</button>
+<button onclick="resetData()"><i data-lucide="rotate-ccw"></i>Reset</button>
+<button onclick="printChecklist()"><i data-lucide="printer"></i>Stampa</button>
+<button onclick="shareChecklist()"><i data-lucide="share-2"></i>Condividi</button>
+<button onclick="exportData()"><i data-lucide="upload"></i>Esporta (corrente)</button>
+<input type="file" id="importFile" style="display:none" onchange="importData(event)">
+<button onclick="document.getElementById('importFile').click()"><i data-lucide="download"></i>Importa</button>
+<button onclick="window.open('https://www.windy.com', '_blank')"><i data-lucide="wind"></i>Windy</button>
+<button id="gpsMainBtn" onclick="toggleMainMap()"><i data-lucide="map-pin"></i>GPS / Mappa</button>
+<button id="gpsMainBtn" onclick="toggleMainMap()"><i data-lucide="map-pin"></i>GPS / Mappa</button>
+</div>
+
+<div style="margin:10px 0; display:flex; gap:10px;">
+  <input id="user_name" placeholder="Nome utilizzatore">
+  <input id="kayak_type" placeholder="Tipo di kayak">
+</div>
+
+<div id="active_user_label" style="margin:10px 0; padding:8px; background:#2563eb; color:white; border-radius:8px; font-weight:bold;">
+👤 Nessun utente selezionato
+</div>
+
+<div id="app"></div>
+
+<!-- SEZIONE MAPPA PER ROTTE MARINE (GPS integrata) -->
+<div id="routeSection" class="route-container" style="display:none;">
+  <div class="route-header" onclick="toggleRoutePanel()">
+    <i data-lucide="map"></i> 🗺️ Traccia Rotta Marina (OpenStreetMap)
+  </div>
+  <div id="routePanel" class="route-content">
+    <div id="routeMap"></div>
+    <div id="gpsCoords" class="gps-coords">📍 GPS: in attesa di posizione...</div>
+    <div class="route-controls">
+      <button onclick="getLocationForRoute()"><i data-lucide="crosshair"></i>La mia posizione</button>
+      <button onclick="clearCurrentRoute()"><i data-lucide="trash-2"></i>Pulisci rotta</button>
+      <button onclick="undoLastPoint()"><i data-lucide="undo-2"></i>Annulla ultimo punto</button>
+      <button onclick="saveCurrentRoute()"><i data-lucide="save"></i>Salva rotta</button>
+      <button onclick="centerOnRoute()"><i data-lucide="crosshair"></i>Centra rotta</button>
+    </div>
+    <div class="distance-info" id="distanceInfo">
+      📏 Distanza totale: 0 km | Ultimo segmento: 0 km
+    </div>
+    <div class="waypoint-list" id="waypointList">
+      <div style="color:#64748b; text-align:center;">Clicca sulla mappa per aggiungere waypoint</div>
+    </div>
+    <div class="saved-routes" id="savedRoutesContainer">
+      <strong>📌 Rotte salvate:</strong>
+      <div id="savedRoutesList"></div>
+    </div>
+    <div style="font-size:11px; color:#475569; margin-top:8px; background:#fff9c4; padding:6px; border-radius:6px;">
+      💡 Istruzioni: Clicca sulla mappa per aggiungere punti. La distanza viene calcolata in linea d'aria (utile per stime marine). I waypoint sono trascinabili.
+    </div>
+  </div>
+</div>
+
+<!-- SEZIONE CONTATTI EMERGENZA (in fondo) -->
+<div id="emergencyContainer"></div>
+
+<div class="footer">
+Tutto il materiale che non deve bagnarsi deve essere riposto nelle apposite sacche stagne.
+</div>
+
+<script>
+// ==================== MODULO ROTTE MARINE ====================
+let routeMap = null;
+let waypoints = [];
+let markers = [];
+let polyline = null;
+let currentRouteName = null;
+let currentPositionForRoute = null;
+
+// Funzione per calcolare distanza tra due punti (formula Haversine - km)
+function haversineDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon/2) * Math.sin(dLon/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return R * c;
+}
+
+function calculateTotalDistance(points) {
+  let total = 0;
+  for (let i = 1; i < points.length; i++) {
+    total += haversineDistance(points[i-1].lat, points[i-1].lng, points[i].lat, points[i].lng);
+  }
+  return total;
+}
+
+function updateDistanceInfo() {
+  const infoDiv = document.getElementById("distanceInfo");
+  if (!infoDiv) return;
+  if (waypoints.length === 0) {
+    infoDiv.innerHTML = "📏 Distanza totale: 0 km | Ultimo segmento: 0 km";
+    return;
+  }
+  const totalDist = calculateTotalDistance(waypoints);
+  let lastSegment = 0;
+  if (waypoints.length >= 2) {
+    const last = waypoints[waypoints.length-1];
+    const prev = waypoints[waypoints.length-2];
+    lastSegment = haversineDistance(prev.lat, prev.lng, last.lat, last.lng);
+  }
+  infoDiv.innerHTML = `📏 Distanza totale: ${totalDist.toFixed(2)} km | Ultimo segmento: ${lastSegment.toFixed(2)} km`;
+}
+
+function updateWaypointList() {
+  const container = document.getElementById("waypointList");
+  if (!container) return;
+  if (waypoints.length === 0) {
+    container.innerHTML = '<div style="color:#64748b; text-align:center;">Clicca sulla mappa per aggiungere waypoint</div>';
+    return;
+  }
+  let html = '';
+  waypoints.forEach((wp, idx) => {
+    let distFromStart = 0;
+    if (idx > 0) {
+      for (let i = 1; i <= idx; i++) {
+        distFromStart += haversineDistance(waypoints[i-1].lat, waypoints[i-1].lng, waypoints[i].lat, waypoints[i].lng);
+      }
+    }
+    html += `
+      <div class="waypoint-item">
+        <span><strong>${idx+1}</strong> ${wp.lat.toFixed(5)}, ${wp.lng.toFixed(5)}</span>
+        <span style="font-size:11px;">📏 ${distFromStart.toFixed(2)} km</span>
+      </div>
+    `;
+  });
+  container.innerHTML = html;
+}
+
+function updateMapDrawing() {
+  if (!routeMap) return;
+  markers.forEach(m => routeMap.removeLayer(m));
+  markers = [];
+  if (polyline) routeMap.removeLayer(polyline);
+  
+  waypoints.forEach((wp, idx) => {
+    const marker = L.marker([wp.lat, wp.lng], { draggable: true });
+    marker.bindPopup(`<b>Punto ${idx+1}</b><br>Lat: ${wp.lat.toFixed(5)}<br>Lng: ${wp.lng.toFixed(5)}<br>Distanza: ${idx>0 ? haversineDistance(waypoints[idx-1].lat, waypoints[idx-1].lng, wp.lat, wp.lng).toFixed(2)+' km' : 'Start'}`);
+    marker.on('dragend', function(e) {
+      const newPos = marker.getLatLng();
+      waypoints[idx] = { lat: newPos.lat, lng: newPos.lng };
+      updateMapDrawing();
+      updateDistanceInfo();
+      updateWaypointList();
+      autoSaveCurrentRoute();
+    });
+    marker.addTo(routeMap);
+    markers.push(marker);
+  });
+  
+  if (waypoints.length >= 2) {
+    const latlngs = waypoints.map(wp => [wp.lat, wp.lng]);
+    polyline = L.polyline(latlngs, { color: '#dc2626', weight: 5, opacity: 0.9 }).addTo(routeMap);
+  }
+  
+  updateDistanceInfo();
+  updateWaypointList();
+}
+
+function addWaypoint(lat, lng) {
+  waypoints.push({ lat, lng });
+  updateMapDrawing();
+  autoSaveCurrentRoute();
+}
+
+function undoLastPoint() {
+  if (waypoints.length > 0) {
+    waypoints.pop();
+    updateMapDrawing();
+    autoSaveCurrentRoute();
+  } else {
+    alert("Nessun punto da annullare");
+  }
+}
+
+function clearCurrentRoute() {
+  if (confirm("Cancellare tutti i waypoint della rotta corrente?")) {
+    waypoints = [];
+    updateMapDrawing();
+    autoSaveCurrentRoute();
+  }
+}
+
+function centerOnRoute() {
+  if (!routeMap) return;
+  if (waypoints.length === 0) {
+    alert("Nessun waypoint sulla rotta");
+    return;
+  }
+  const bounds = L.latLngBounds(waypoints.map(wp => [wp.lat, wp.lng]));
+  routeMap.fitBounds(bounds);
+}
+
+function autoSaveCurrentRoute() {
+  if (currentRouteName && waypoints.length >= 2) {
+    saveRouteToStorage(currentRouteName, waypoints);
+  }
+}
+
+function saveRouteToStorage(name, points) {
+  const saved = JSON.parse(localStorage.getItem("saved_routes") || "{}");
+  saved[name] = points;
+  localStorage.setItem("saved_routes", JSON.stringify(saved));
+  renderSavedRoutesList();
+}
+
+function saveCurrentRoute() {
+  if (waypoints.length < 2) {
+    alert("Aggiungi almeno 2 waypoint per salvare una rotta");
+    return;
+  }
+  const name = prompt("Nome della rotta (es. 'Palermo - Ustica'):", currentRouteName || `Rotta ${new Date().toLocaleDateString()}`);
+  if (!name) return;
+  currentRouteName = name;
+  saveRouteToStorage(name, waypoints);
+  alert(`Rotta "${name}" salvata! (${waypoints.length} waypoint, ${calculateTotalDistance(waypoints).toFixed(2)} km)`);
+}
+
+function loadRoute(name) {
+  const saved = JSON.parse(localStorage.getItem("saved_routes") || "{}");
+  if (saved[name]) {
+    waypoints = JSON.parse(JSON.stringify(saved[name]));
+    currentRouteName = name;
+    updateMapDrawing();
+    centerOnRoute();
+    alert(`Rotta "${name}" caricata (${waypoints.length} waypoint, ${calculateTotalDistance(waypoints).toFixed(2)} km)`);
+  } else {
+    alert("Rotta non trovata");
+  }
+}
+
+function deleteSavedRoute(name) {
+  if (confirm(`Eliminare la rotta "${name}"?`)) {
+    const saved = JSON.parse(localStorage.getItem("saved_routes") || "{}");
+    delete saved[name];
+    localStorage.setItem("saved_routes", JSON.stringify(saved));
+    if (currentRouteName === name) {
+      waypoints = [];
+      currentRouteName = null;
+      updateMapDrawing();
+    }
+    renderSavedRoutesList();
+  }
+}
+
+function renderSavedRoutesList() {
+  const saved = JSON.parse(localStorage.getItem("saved_routes") || "{}");
+  const container = document.getElementById("savedRoutesList");
+  if (!container) return;
+  if (Object.keys(saved).length === 0) {
+    container.innerHTML = '<div style="color:#64748b;">Nessuna rotta salvata</div>';
+    return;
+  }
+  let html = '';
+  for (let name in saved) {
+    const points = saved[name];
+    const dist = calculateTotalDistance(points);
+    html += `
+      <div class="route-chip" onclick="loadRoute('${name.replace(/'/g, "\\'")}')" style="display:inline-flex; align-items:center; gap:6px;">
+        <span>🗺️ ${name}</span>
+        <span style="font-size:10px;">(${dist.toFixed(1)} km)</span>
+        <button onclick="event.stopPropagation(); deleteSavedRoute('${name.replace(/'/g, "\\'")}')" style="background:#dc2626; border:none; color:white; border-radius:12px; padding:2px 6px; font-size:10px; cursor:pointer;">❌</button>
+      </div>
+    `;
+  }
+  container.innerHTML = html;
+}
+
+function initRouteMap(centerLat = 38.1, centerLon = 13.35) {
+  const mapContainer = document.getElementById("routeMap");
+  if (!mapContainer) return;
+  
+  if (routeMap) {
+    routeMap.remove();
+    routeMap = null;
+  }
+  
+  routeMap = L.map('routeMap').setView([centerLat, centerLon], 9);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    maxZoom: 19
+  }).addTo(routeMap);
+  routeMap.zoomControl.setPosition('topright');
+  
+  routeMap.on('click', function(e) {
+    addWaypoint(e.latlng.lat, e.latlng.lng);
+  });
+}
+
+function getLocationForRoute() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(pos => {
+      currentPositionForRoute = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+      const coordsDiv = document.getElementById("gpsCoords");
+      if (coordsDiv) coordsDiv.innerHTML = `📍 GPS: ${currentPositionForRoute.lat.toFixed(5)}, ${currentPositionForRoute.lng.toFixed(5)}`;
+      if (routeMap) {
+        routeMap.setView([currentPositionForRoute.lat, currentPositionForRoute.lng], 13);
+        L.marker([currentPositionForRoute.lat, currentPositionForRoute.lng]).addTo(routeMap).bindPopup("📍 La tua posizione").openPopup();
+      }
+    }, () => {
+      alert("Impossibile ottenere la posizione GPS");
+    });
+  } else {
+    alert("GPS non supportato");
+  }
+}
+
+function toggleMainMap() {
+  const routeSection = document.getElementById("routeSection");
+  if (routeSection.style.display === "none") {
+    routeSection.style.display = "block";
+    // Inizializza la mappa solo ora che il contenitore è visibile
+    setTimeout(() => {
+      if (!routeMap) {
+        initRouteMap();
+      } else {
+        routeMap.invalidateSize();
+      }
+      getLocationForRoute();
+    }, 100);
+  } else {
+    routeSection.style.display = "none";
+  }
+}
+
+function toggleRoutePanel() {
+  // mantenuto per compatibilità
+}
+
+// ==================== FINE MODULO ROTTE ====================
+
+const positions = ["GA","PH","DH","GP"];
+const posNames = {"GA":"Gavone Anteriore", "PH":"Pocket Hatch", "DH":"Day Hatch", "GP":"Gavone Posteriore"};
+
+const icons = {
+ "EQUIPAGGIAMENTO INDOSSATO":"<i data-lucide='user'></i>",
+ "PONTE KAYAK":"<i data-lucide='anchor'></i>",
+ "SISTEMA NOTTE":"<i data-lucide='moon'></i>",
+ "VESTITI DI RICAMBIO":"<i data-lucide='shirt'></i>",
+ "CUCINA":"<i data-lucide='flame'></i>",
+ "SISTEMA ACQUA":"<i data-lucide='droplet'></i>",
+ "SICUREZZA":"<i data-lucide='life-buoy'></i>",
+ "SISTEMA FUOCO / ATTREZZI":"<i data-lucide='flame'></i>",
+ "CIBO":"<i data-lucide='utensils'></i>",
+ "METEO":"<i data-lucide='cloud-sun'></i>",
+ "ALTRO":"<i data-lucide='plus'></i>",
+ "KIT PRIMO SOCCORSO":"<i data-lucide='heart-pulse'></i>",
+ "KIT IGIENE":"<i data-lucide='droplets'></i>",
+ "KIT RIPARAZIONE KAYAK":"<i data-lucide='wrench'></i>",
+ "KIT RIPARAZIONE OGGETTI":"<i data-lucide='settings'></i>",
+ "GAVONI":"<i data-lucide='package'></i>",
+ "NOTE":"<i data-lucide='notebook'></i>",
+ "LEGENDA":"<i data-lucide='book-open'></i>"
+};
+
+const EXCLUDED_FROM_ANALYSIS = ["EQUIPAGGIAMENTO INDOSSATO","PONTE KAYAK","SISTEMA NOTTE","VESTITI DI RICAMBIO"];
+
+const data = {
+  "EQUIPAGGIAMENTO INDOSSATO":["PFD","Paraspruzzi","Muta stagna / Neoprene","Sottomuta","Calzari","Guanti o Moffole","Coltello rescue","Orologio","Fischietto","InReach","VHF","Leash pagaia","Occhiali da sole","Cappello con visiera","Snack"],
+  "PONTE KAYAK":["Pagaia principale","Pagaia di rispetto","Pompa di sentina/Sassola","Spugna","Paddle float","Cima traino","Contact line","Casco"],
+  "SISTEMA NOTTE":["Tenda/Tarp","Cordini","Pali","Picchetti","Materassino","Sacco a pelo","Cuscino","Bivi bag","Sacco letto"],
+  "VESTITI DI RICAMBIO":["Intimo","Baselayer","Midlayer","Giacca calda","Calze","Cappello di lana","Guanti di lana","Scarpe"],
+  "CUCINA":["Fornellino","Pentola","Posate","Tazza","Caffettiera","Carburante fornello","Spugna pulizia"],
+  "SISTEMA ACQUA":["Taniche","Borracce","Filtro acqua","Pastiglie purificatrici","Camel bag"],
+  "SICUREZZA":["Kit primo soccorso","Kit Igiene","Telefono in sacca stagna","Kit riparazione kayak","Kit riparazione oggetti","Luce frontale","Luci navigazione notturna","Power bank","Batterie","Cavi ricarica","Leatherman o Victorinox","Accendino","Crema solare","Sacchetti robusti","Sacche stagne","Poncho"],
+  "SISTEMA FUOCO / ATTREZZI":["Segaccio","Accetta","Acciarino","Inneschi","Coltello","Paletta"]
+};
+
+function loadData() { return JSON.parse(localStorage.getItem("checklist")) || {}; }
+
+document.addEventListener("input", function(e){
+  let stored = JSON.parse(localStorage.getItem("checklist")) || {};
+  if(e.target && e.target.id){
+    stored[e.target.id] = e.target.type === "checkbox" ? e.target.checked : e.target.value;
+    localStorage.setItem("checklist", JSON.stringify(stored));
+    let active = localStorage.getItem("active_user");
+    if(active){
+      let all = JSON.parse(localStorage.getItem("akc_group") || "{}");
+      all[active] = stored;
+      localStorage.setItem("akc_group", JSON.stringify(all));
+    }
+  }
+});
+
+function saveData(){
+  let existing = JSON.parse(localStorage.getItem("checklist")) || {};
+  let saved = {...existing};
+  document.querySelectorAll("input,textarea").forEach(i => { saved[i.id] = i.type === "checkbox" ? i.checked : i.value; });
+  localStorage.setItem("checklist", JSON.stringify(saved));
+  let active = localStorage.getItem("active_user");
+  if(active) saveCurrentForUser(active);
+  alert("Salvato 👍");
+}
+
+function resetData(){
+  if(confirm("Vuoi resettare solo la checklist corrente?")){
+    localStorage.removeItem("checklist");
+    location.reload();
+  }
+}
+
+function toggle(el) { let c = el.nextElementSibling; c.style.display = c.style.display === "block" ? "none" : "block"; }
+
+function renderSection(app, name, items, saved, showPositionSelectors = true){
+  let div = document.createElement("div"); div.className = "section";
+  let h = document.createElement("div"); h.className = "section-header"; h.innerHTML = (icons[name] ? icons[name] + " " : "") + name; h.onclick = () => toggle(h);
+  div.appendChild(h);
+  let c = document.createElement("div"); c.className = "section-content";
+  items.forEach(item => {
+    let row = document.createElement("div"); row.className = "item-row";
+    let label = document.createElement("label"); label.className = "main";
+    let id = name + "_" + item;
+    let cb = document.createElement("input"); cb.type = "checkbox"; cb.id = id;
+    if(saved[id]) cb.checked = true;
+    label.appendChild(cb); label.append(" " + item);
+    let posDiv = document.createElement("div"); posDiv.className = "pos";
+    if(showPositionSelectors){
+      positions.forEach(p => {
+        let pid = id + "_" + p;
+        let pl = document.createElement("label");
+        let pcb = document.createElement("input"); pcb.type = "checkbox"; pcb.id = pid;
+        if(saved[pid]) pcb.checked = true;
+        pcb.addEventListener("change", function(){
+          if(this.checked){
+            positions.forEach(other => { if(other !== p){ let otherId = id + "_" + other; let otherCb = document.getElementById(otherId); if(otherCb) otherCb.checked = false; } });
+          }
+        });
+        pl.appendChild(pcb);
+        let t = document.createElement("span"); t.innerText = p;
+        pl.appendChild(t);
+        posDiv.appendChild(pl);
+      });
+    } else {
+      let emptySpan = document.createElement("span"); emptySpan.style.width = "80px"; emptySpan.style.display = "inline-block"; posDiv.appendChild(emptySpan);
+    }
+    row.appendChild(label); row.appendChild(posDiv); c.appendChild(row);
+  });
+  let stored = JSON.parse(localStorage.getItem("checklist")) || {};
+  let keyExtra = name + "_ALTRO";
+  let itemsExtra = []; if(stored[keyExtra]){ try{ itemsExtra = JSON.parse(stored[keyExtra]); }catch(e){} }
+  itemsExtra.forEach(it => {
+    let row = document.createElement("div"); row.className = "item-row";
+    let label = document.createElement("label"); label.className = "main";
+    let id = name + "_ALTRO_" + it;
+    let cb = document.createElement("input"); cb.type = "checkbox"; cb.id = id;
+    if(saved[id]) cb.checked = true;
+    label.appendChild(cb); label.append(" " + it);
+    let posDiv = document.createElement("div"); posDiv.className = "pos";
+    if(showPositionSelectors){
+      positions.forEach(p => {
+        let pid = id + "_" + p;
+        let pl = document.createElement("label");
+        let pcb = document.createElement("input"); pcb.type = "checkbox"; pcb.id = pid;
+        if(saved[pid]) pcb.checked = true;
+        pcb.addEventListener("change", function(){
+          if(this.checked){
+            positions.forEach(other => { if(other !== p){ let otherId = id + "_" + other; let otherCb = document.getElementById(otherId); if(otherCb) otherCb.checked = false; } });
+          }
+        });
+        pl.appendChild(pcb);
+        let t = document.createElement("span"); t.innerText = p;
+        pl.appendChild(t);
+        posDiv.appendChild(pl);
+      });
+    } else {
+      let emptySpan = document.createElement("span"); emptySpan.style.width = "80px"; emptySpan.style.display = "inline-block"; posDiv.appendChild(emptySpan);
+    }
+    row.appendChild(label); row.appendChild(posDiv);
+    let del = document.createElement("button"); del.innerText = "❌"; del.style.background = "red"; del.style.marginLeft = "5px"; del.style.padding = "2px 6px"; del.style.fontSize = "10px"; del.style.borderRadius = "4px";
+    del.onclick = function(){
+      let stored = JSON.parse(localStorage.getItem("checklist")) || {};
+      let key = name + "_ALTRO";
+      let items = JSON.parse(stored[key] || "[]");
+      items = items.filter(x => x !== it);
+      stored[key] = JSON.stringify(items);
+      localStorage.setItem("checklist", JSON.stringify(stored));
+      render(); if(window.lucide) lucide.createIcons(); openSectionByName(name);
+    };
+    row.appendChild(del); c.appendChild(row);
+  });
+  let extraInput = document.createElement("input"); extraInput.placeholder = "Aggiungi elemento...";
+  let extraBtn = document.createElement("button"); extraBtn.innerText = "Aggiungi";
+  extraBtn.onclick = function(){
+    if(!extraInput.value) return;
+    let current = {};
+    document.querySelectorAll("input,textarea").forEach(i => { current[i.id] = i.type === "checkbox" ? i.checked : i.value; });
+    let stored = JSON.parse(localStorage.getItem("checklist")) || {};
+    stored = {...stored, ...current};
+    let key = name + "_ALTRO";
+    let items = []; if(stored[key]){ try{ items = JSON.parse(stored[key]); }catch(e){} }
+    items.push(extraInput.value);
+    stored[key] = JSON.stringify(items);
+    localStorage.setItem("checklist", JSON.stringify(stored));
+    extraInput.value = "";
+    render(); if(window.lucide) lucide.createIcons(); openSectionByName(name);
+  };
+  c.appendChild(extraInput); c.appendChild(extraBtn);
+  div.appendChild(c);
+  app.appendChild(div);
+  return c;
+}
+
+function printChecklist(){ window.print(); }
+
+function renderGavoni(saved){
+  let gavoniDiv = document.createElement("div"); gavoniDiv.className = "section";
+  let gh = document.createElement("div"); gh.className = "section-header"; gh.innerHTML = (icons["GAVONI"] + " GAVONI"); gh.onclick = () => toggle(gh);
+  gavoniDiv.appendChild(gh);
+  let gc = document.createElement("div"); gc.className = "section-content";
+  for(let pos of positions){
+    let sub = document.createElement("div"); sub.className = "section";
+    let sh = document.createElement("div"); sh.className = "section-header"; sh.innerText = posNames[pos]; sh.onclick = () => toggle(sh);
+    let sc = document.createElement("div"); sc.className = "section-content";
+    let itemsFound = [];
+    for(let key in saved){ if(saved[key] === true && key.endsWith("_" + pos)){ let itemName = key.substring(0, key.lastIndexOf("_" + pos)); let displayName = itemName.replace(/_/g, " "); itemsFound.push(displayName); } }
+    if(itemsFound.length === 0){ let emptyMsg = document.createElement("div"); emptyMsg.innerText = "📦 Nessun articolo assegnato a questo scomparto"; emptyMsg.style.color = "#64748b"; emptyMsg.style.fontStyle = "italic"; emptyMsg.style.padding = "8px"; sc.appendChild(emptyMsg); }
+    else { itemsFound.forEach(item => { let itemDiv = document.createElement("div"); itemDiv.className = "gavone-item"; itemDiv.innerHTML = "📌 " + item; sc.appendChild(itemDiv); }); }
+    sub.appendChild(sh); sub.appendChild(sc); gc.appendChild(sub);
+  }
+  gavoniDiv.appendChild(gc);
+  return gavoniDiv;
+}
+
+function render(){
+  const app = document.getElementById("app");
+  app.innerHTML = "";
+  const saved = loadData();
+  if(saved["user_name"]) document.getElementById("user_name").value = saved["user_name"];
+  if(saved["kayak_type"]) document.getElementById("kayak_type").value = saved["kayak_type"];
+  renderSection(app, "EQUIPAGGIAMENTO INDOSSATO", data["EQUIPAGGIAMENTO INDOSSATO"], saved, false);
+  renderSection(app, "PONTE KAYAK", data["PONTE KAYAK"], saved, false);
+  renderSection(app, "SISTEMA NOTTE", data["SISTEMA NOTTE"], saved, true);
+  renderSection(app, "VESTITI DI RICAMBIO", data["VESTITI DI RICAMBIO"], saved, true);
+  renderSection(app, "CUCINA", data["CUCINA"], saved, true);
+  renderSection(app, "SISTEMA ACQUA", data["SISTEMA ACQUA"], saved, true);
+  renderSection(app, "SICUREZZA", data["SICUREZZA"], saved, true);
+  renderSection(app, "SISTEMA FUOCO / ATTREZZI", data["SISTEMA FUOCO / ATTREZZI"], saved, true);
+  
+  // CIBO (semplificato ma funzionante)
+  let food = document.createElement("div"); food.className = "section";
+  let fh = document.createElement("div"); fh.className = "section-header"; fh.innerHTML = (icons["CIBO"] + " CIBO"); fh.onclick = () => toggle(fh);
+  food.appendChild(fh);
+  let fc = document.createElement("div"); fc.className = "section-content";
+  let foodDays = saved["food_days"] || 1;
+  (function renderFoodDays(){
+    fc.innerHTML = "";
+    for(let i = 1; i <= foodDays; i++){
+      let d = document.createElement("div"); d.className = "day";
+      let header = document.createElement("div"); header.innerHTML = "<b>Giorno " + i + "</b>"; header.style.cursor = "pointer";
+      let content = document.createElement("div"); content.style.display = "none";
+      header.onclick = () => { fc.querySelectorAll('.day > div:nth-child(2)').forEach(c => { if(c !== content) c.style.display = "none"; }); content.style.display = content.style.display === "block" ? "none" : "block"; };
+      let del = document.createElement("button"); del.innerText = "❌"; del.style.fontSize = "10px"; del.style.marginLeft = "10px";
+      del.onclick = () => { let stored = loadData(); ["Colazione","Pranzo","Cena"].forEach(m => { delete stored["food_" + i + "_" + m]; }); stored["food_days"] = Math.max(1, (stored["food_days"] || 1) - 1); localStorage.setItem("checklist", JSON.stringify(stored)); render(); openSectionByName("CIBO"); };
+      header.appendChild(del); d.appendChild(header);
+      ["Colazione","Pranzo","Cena"].forEach(m => { let l = document.createElement("div"); l.className = "meal"; l.innerText = m; let inp = document.createElement("input"); inp.id = "food_" + i + "_" + m; if(saved[inp.id]) inp.value = saved[inp.id]; content.appendChild(l); content.appendChild(inp); });
+      d.appendChild(content); fc.appendChild(d);
+    }
+    let addBtn = document.createElement("button"); addBtn.innerText = "➕ Aggiungi giorno";
+    addBtn.onclick = () => { let current = {}; document.querySelectorAll("input,textarea").forEach(i => { current[i.id] = i.type === "checkbox" ? i.checked : i.value; }); let stored = loadData(); stored = {...stored, ...current}; stored["food_days"] = (stored["food_days"] || 1) + 1; localStorage.setItem("checklist", JSON.stringify(stored)); render(); openSectionByName("CIBO"); };
+    fc.appendChild(addBtn);
+  })(); food.appendChild(fc); app.appendChild(food);
+  
+  // METEO
+  let met = document.createElement("div"); met.className = "section";
+  let mh = document.createElement("div"); mh.className = "section-header"; mh.innerHTML = (icons["METEO"] + " METEO"); mh.onclick = () => toggle(mh);
+  met.appendChild(mh);
+  let mc = document.createElement("div"); mc.className = "section-content";
+  let meteoDays = saved["meteo_days"] || 1;
+  (function renderMeteoDays(){
+    mc.innerHTML = "";
+    for(let i = 1; i <= meteoDays; i++){
+      let d = document.createElement("div"); d.className = "day";
+      let header = document.createElement("div"); header.innerHTML = "<b>Giorno " + i + "</b>"; header.style.cursor = "pointer";
+      let content = document.createElement("div"); content.style.display = "none";
+      header.onclick = () => { mc.querySelectorAll('.day > div:nth-child(2)').forEach(c => { if(c !== content) c.style.display = "none"; }); content.style.display = content.style.display === "block" ? "none" : "block"; };
+      let del = document.createElement("button"); del.innerText = "❌"; del.style.fontSize = "10px"; del.style.marginLeft = "10px";
+      del.onclick = () => { let stored = loadData(); ["Mattina","Pomeriggio","Sera"].forEach(m => { delete stored["meteo_" + i + "_" + m]; }); stored["meteo_days"] = Math.max(1, (stored["meteo_days"] || 1) - 1); localStorage.setItem("checklist", JSON.stringify(stored)); render(); openSectionByName("METEO"); };
+      header.appendChild(del); d.appendChild(header);
+      ["Mattina","Pomeriggio","Sera"].forEach(m => { let l = document.createElement("div"); l.className = "meal"; l.innerText = m; let inp = document.createElement("input"); inp.id = "meteo_" + i + "_" + m; if(saved[inp.id]) inp.value = saved[inp.id]; content.appendChild(l); content.appendChild(inp); });
+      d.appendChild(content); mc.appendChild(d);
+    }
+    let addBtn = document.createElement("button"); addBtn.innerText = "➕ Aggiungi giorno";
+    addBtn.onclick = () => { let current = {}; document.querySelectorAll("input,textarea").forEach(i => { current[i.id] = i.type === "checkbox" ? i.checked : i.value; }); let stored = loadData(); stored = {...stored, ...current}; stored["meteo_days"] = (stored["meteo_days"] || 1) + 1; localStorage.setItem("checklist", JSON.stringify(stored)); render(); openSectionByName("METEO"); };
+    mc.appendChild(addBtn);
+  })(); met.appendChild(mc); app.appendChild(met);
+  
+  let otherItems = []; if(saved["ALTRO_list"]){ try{ otherItems = JSON.parse(saved["ALTRO_list"]); }catch(e){} }
+  renderSection(app, "ALTRO", otherItems, saved, true);
+  renderSection(app, "KIT PRIMO SOCCORSO", [], saved, true);
+  renderSection(app, "KIT IGIENE", [], saved, true);
+  renderSection(app, "KIT RIPARAZIONE KAYAK", [], saved, true);
+  renderSection(app, "KIT RIPARAZIONE OGGETTI", [], saved, true);
+  app.appendChild(renderGavoni(saved));
+  
+  let note = document.createElement("div"); note.className = "section";
+  let nh = document.createElement("div"); nh.className = "section-header"; nh.innerHTML = (icons["NOTE"] + " NOTE"); nh.onclick = () => toggle(nh);
+  note.appendChild(nh);
+  let nc = document.createElement("div"); nc.className = "section-content";
+  let ta = document.createElement("textarea"); ta.id = "notes"; if(saved["notes"]) ta.value = saved["notes"];
+  nc.appendChild(ta); note.appendChild(nc); app.appendChild(note);
+  
+  let legenda = document.createElement("div"); legenda.className = "section";
+  let lh = document.createElement("div"); lh.className = "section-header"; lh.innerHTML = (icons["LEGENDA"] + " LEGENDA"); lh.onclick = () => toggle(lh);
+  legenda.appendChild(lh);
+  let lc = document.createElement("div"); lc.className = "section-content"; lc.innerHTML = "GA = Gavone anteriore<br>PH = Poket Hatch<br>DH = Day Hatch<br>GP = Gavone posteriore";
+  legenda.appendChild(lc); app.appendChild(legenda);
+}
+
+render();
+if(window.lucide) lucide.createIcons();
+
+// ==================== CONTATTI EMERGENZA ====================
+let emergencyContacts = [];
+
+function loadEmergencyContacts(){
+  let saved = localStorage.getItem("emergency_contacts");
+  if(saved){ try{ emergencyContacts = JSON.parse(saved); }catch(e){} }
+  if(emergencyContacts.length === 0){
+    emergencyContacts = [
+      { name: "Emergenza Mare", phone: "1530", email: "", note: "Numero unico emergenza in mare" },
+      { name: "118 / Pronto Soccorso", phone: "118", email: "", note: "Emergenza sanitaria" },
+      { name: "Guardia Costiera", phone: "1530", email: "", note: "Soccorso in mare" }
+    ];
+    saveEmergencyContacts();
+  }
+  renderEmergencyContacts();
+}
+
+function saveEmergencyContacts(){ localStorage.setItem("emergency_contacts", JSON.stringify(emergencyContacts)); renderEmergencyContacts(); }
+
+function escapeHtml(str){ if(!str) return ""; return str.replace(/[&<>]/g, function(m){ if(m === '&') return '&amp;'; if(m === '<') return '&lt;'; if(m === '>') return '&gt;'; return m;}); }
+
+function sendSMS(phone, name){
+  let msg = prompt(`Messaggio SMS per ${name}:`, "Emergenza Kayak - Ho bisogno di assistenza.");
+  if(!msg) return;
+  window.location.href = `sms:${encodeURIComponent(phone)}?body=${encodeURIComponent(msg)}`;
+  alert("Apertura client SMS...");
+}
+
+function makeCall(phone){
+  if(confirm(`Chiamare ${phone}?`)) window.location.href = `tel:${phone}`;
+}
+
+function sendEmail(email, name){
+  let subject = prompt("Oggetto email:", "EMERGENZA KAYAK");
+  if(!subject) return;
+  let body = prompt("Corpo email:", "Richiesta assistenza durante uscita in kayak.");
+  if(!body) return;
+  window.location.href = `mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  alert("Apertura client email...");
+}
+
+function prepareSatMessage(contact){
+  let lat = currentPositionForRoute ? currentPositionForRoute.lat : null;
+  let lon = currentPositionForRoute ? currentPositionForRoute.lng : null;
+  let posText = "";
+  if(lat && lon){
+    posText = `\n📍 POSIZIONE GPS: ${lat.toFixed(5)}, ${lon.toFixed(5)}\n📍 Maps: https://maps.google.com/?q=${lat},${lon}`;
+  } else {
+    posText = "\n⚠️ Posizione GPS non disponibile. Attivare GPS prima di inviare SOS.";
+  }
+  let userName = document.getElementById("user_name").value || "Equipaggio";
+  let kayak = document.getElementById("kayak_type").value || "Kayak";
+  let fullMsg = `🚨 SOS KAYAK - ${userName}\n📌 Contatto: ${contact.name}\n📞 Tel: ${contact.phone || "N/A"}${posText}\n🛶 Kayak: ${kayak}\n⏰ Timestamp: ${new Date().toLocaleString()}\n\nMessaggio di emergenza via dispositivo satellitare. Richiesto intervento immediato.`;
+  navigator.clipboard.writeText(fullMsg);
+  alert(`✅ Messaggio SOS copiato!\n\n${fullMsg}`);
+}
+
+function renderEmergencyContacts(){
+  let container = document.getElementById("emergencyContainer");
+  if(!container) return;
+  container.innerHTML = "";
+  let mainDiv = document.createElement("div"); mainDiv.className = "section emergency-section";
+  let header = document.createElement("div"); header.className = "section-header"; header.innerHTML = '<i data-lucide="phone-call"></i> 📞 CONTATTI EMERGENZA (SMS/Telefono/Email/Sat)'; header.style.background = "#fecaca"; header.style.color = "#991b1b"; header.onclick = () => toggle(header);
+  mainDiv.appendChild(header);
+  let content = document.createElement("div"); content.className = "section-content";
+  
+  emergencyContacts.forEach((contact, idx) => {
+    let card = document.createElement("div"); card.className = "contact-card";
+    card.innerHTML = `
+      <div class="contact-info">
+        <div class="contact-name">${escapeHtml(contact.name)}</div>
+        <div class="contact-detail">📞 ${contact.phone || "—"} &nbsp;|&nbsp; ✉️ ${contact.email || "—"}</div>
+        <div class="contact-detail" style="font-size:10px;">${contact.note || ""}</div>
+      </div>
+      <div class="contact-actions">
+        ${contact.phone ? `<button class="btn-emergency" data-type="sms" data-idx="${idx}"><i data-lucide="message-square"></i>SMS</button>
+        <button class="btn-emergency" data-type="call" data-idx="${idx}"><i data-lucide="phone"></i>Chiama</button>` : ''}
+        ${contact.email ? `<button class="btn-emergency" data-type="email" data-idx="${idx}"><i data-lucide="mail"></i>Email</button>` : ''}
+        <button class="btn-sat" data-type="satellite" data-idx="${idx}"><i data-lucide="satellite"></i>Sat (copia)</button>
+        <button class="edit-contact" data-idx="${idx}" style="background:#64748b;border-color:#475569;"><i data-lucide="edit-2"></i></button>
+        <button class="delete-contact" data-idx="${idx}" style="background:#ef4444;border-color:#b91c1c;"><i data-lucide="trash-2"></i></button>
+      </div>
+    `;
+    content.appendChild(card);
+  });
+  
+  let addBtn = document.createElement("button"); addBtn.innerHTML = '<i data-lucide="plus-circle"></i> Aggiungi contatto emergenza'; addBtn.style.marginTop = "10px";
+  addBtn.onclick = () => {
+    let name = prompt("Nome contatto:");
+    if(!name) return;
+    let phone = prompt("Numero telefono:");
+    let email = prompt("Email:");
+    let note = prompt("Note:");
+    emergencyContacts.push({ name, phone: phone||"", email: email||"", note: note||"" });
+    saveEmergencyContacts();
+  };
+  content.appendChild(addBtn);
+  
+  let satNote = document.createElement("div"); satNote.className = "sat-note";
+  satNote.innerHTML = "🛰️ SAT: il pulsante 'Sat (copia)' copia un messaggio SOS con posizione GPS (se disponibile) - ideale per InReach / dispositivi satellitari";
+  content.appendChild(satNote);
+  
+  mainDiv.appendChild(content);
+  container.appendChild(mainDiv);
+  if(window.lucide) lucide.createIcons();
+  
+  document.querySelectorAll(".btn-emergency").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      let type = btn.dataset.type;
+      let idx = parseInt(btn.dataset.idx);
+      let contact = emergencyContacts[idx];
+      if(type === "sms" && contact.phone) sendSMS(contact.phone, contact.name);
+      if(type === "call" && contact.phone) makeCall(contact.phone);
+      if(type === "email" && contact.email) sendEmail(contact.email, contact.name);
+      if(type === "satellite") prepareSatMessage(contact);
+    });
+  });
+  document.querySelectorAll(".edit-contact").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      let idx = parseInt(btn.dataset.idx);
+      let c = emergencyContacts[idx];
+      let newName = prompt("Nome:", c.name); if(newName) c.name = newName;
+      let newPhone = prompt("Telefono:", c.phone); if(newPhone !== null) c.phone = newPhone;
+      let newEmail = prompt("Email:", c.email); if(newEmail !== null) c.email = newEmail;
+      let newNote = prompt("Note:", c.note); if(newNote !== null) c.note = newNote;
+      saveEmergencyContacts();
+    });
+  });
+  document.querySelectorAll(".delete-contact").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      let idx = parseInt(btn.dataset.idx);
+      if(confirm(`Eliminare ${emergencyContacts[idx].name}?`)){
+        emergencyContacts.splice(idx,1);
+        saveEmergencyContacts();
+      }
+    });
+  });
+}
+
+function shareChecklist(){ 
+  let saved = loadData();
+  let text = "🛶 AKC SEAKAYAK EXPEDITIONS PLANS\n\n";
+  if(saved["user_name"]) text += "👤 " + saved["user_name"] + "\n";
+  if(saved["kayak_type"]) text += "🛶 Kayak: " + saved["kayak_type"] + "\n";
+  if (navigator.share) { navigator.share({ title: "Checklist Kayak", text: text }); } 
+  else { navigator.clipboard.writeText(text); alert("Checklist copiata!"); }
+}
+
+function exportData(){ 
+  let blob = new Blob([JSON.stringify(loadData(), null, 2)], {type:"application/json"}); 
+  let a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "checklist_kayak.json"; a.click(); 
+}
+
+function importData(event){
+  let file = event.target.files[0];
+  if(!file) return;
+
+  let reader = new FileReader();
+  reader.onload = function(e){
+    try{
+      let data = JSON.parse(e.target.result);
+
+      localStorage.setItem("checklist", JSON.stringify(data));
+
+      let userName = data["user_name"];
+
+      if(!userName){
+        userName = prompt("Nome utente per questa checklist:");
+      }
+
+      if(userName){
+        let users = JSON.parse(localStorage.getItem("akc_users")||"[]");
+
+        if(!users.includes(userName)){
+          users.push(userName);
+          localStorage.setItem("akc_users", JSON.stringify(users));
+        }
+
+        let group = JSON.parse(localStorage.getItem("akc_group")||"{}");
+        group[userName] = data;
+        localStorage.setItem("akc_group", JSON.stringify(group));
+
+        localStorage.setItem("active_user", userName);
+      }
+
+      alert("Import completato 👍");
+      location.reload();
+
+    }catch(err){
+      alert("File non valido ❌");
+    }
+  };
+
+  reader.readAsText(file);
+}
+
+function openSectionByName(name){ 
+  document.querySelectorAll('.section').forEach(sec => { 
+    const header = sec.querySelector('.section-header'); 
+    const content = sec.querySelector('.section-content'); 
+    if(header && content && header.innerText.includes(name)) content.style.display = "block"; 
+  }); 
+}
+
+// Gestione utenti
+function saveCurrentForUser(user){ 
+  if(!user) return; 
+  let all = JSON.parse(localStorage.getItem("akc_group")||"{}"); 
+  let current = JSON.parse(localStorage.getItem("checklist")) || {}; 
+  document.querySelectorAll("input,textarea").forEach(i=>{ current[i.id]= i.type==="checkbox"? i.checked : i.value; }); 
+  all[user] = current; 
+  localStorage.setItem("akc_group", JSON.stringify(all)); 
+}
+
+function loadUser(user){ 
+  let all = JSON.parse(localStorage.getItem("akc_group")||"{}"); 
+  if(all[user]){ localStorage.setItem("checklist", JSON.stringify(all[user])); location.reload(); } 
+}
+
+function addUser(){ 
+  let name = prompt("Nome nuovo utente:"); 
+  if(!name || name.trim()==="") return; 
+  name = name.trim(); 
+  let users = JSON.parse(localStorage.getItem("akc_users")||"[]"); 
+  if(!users.includes(name)){ 
+    users.push(name); 
+    localStorage.setItem("akc_users", JSON.stringify(users)); 
+    let all = JSON.parse(localStorage.getItem("akc_group")||"{}"); 
+    if(!all[name]){ all[name] = {}; localStorage.setItem("akc_group", JSON.stringify(all)); } 
+  } 
+  renderUserUI(); 
+}
+
+function deleteUser(user){ 
+  if(!confirm(`Eliminare "${user}"?`)) return; 
+  let users = JSON.parse(localStorage.getItem("akc_users")||"[]"); 
+  users = users.filter(u => u !== user); 
+  localStorage.setItem("akc_users", JSON.stringify(users)); 
+  let all = JSON.parse(localStorage.getItem("akc_group")||"{}"); 
+  delete all[user]; 
+  localStorage.setItem("akc_group", JSON.stringify(all)); 
+  if(localStorage.getItem("active_user") === user){ 
+    localStorage.removeItem("active_user"); 
+    localStorage.removeItem("checklist"); 
+    updateActiveUserLabel(); 
+    location.reload(); 
+  } else { renderUserUI(); } 
+}
+
+function renderUserUI(){ 
+  let users = JSON.parse(localStorage.getItem("akc_users")||"[]"); 
+  let container = document.getElementById("user_ui"); 
+  if(!container) return; 
+  container.innerHTML = ""; 
+  let activeUser = localStorage.getItem("active_user"); 
+  users.forEach(u => { 
+    let chip = document.createElement("div"); 
+    chip.className = "user-chip"; 
+    if(u === activeUser) chip.classList.add("active"); 
+    let nameSpan = document.createElement("span"); 
+    nameSpan.innerText = u; 
+    nameSpan.style.cursor = "pointer"; 
+    nameSpan.onclick = () => { 
+      saveCurrentForUser(localStorage.getItem("active_user")); 
+      localStorage.setItem("active_user", u); 
+      updateActiveUserLabel(); 
+      loadUser(u); 
+    }; 
+    let delBtn = document.createElement("button"); 
+    delBtn.innerHTML = "🗑️"; 
+    delBtn.onclick = (e) => { e.stopPropagation(); deleteUser(u); }; 
+    chip.appendChild(nameSpan); 
+    chip.appendChild(delBtn); 
+    container.appendChild(chip); 
+  }); 
+}
+
+function exportUserData(){ 
+  let activeUser = localStorage.getItem("active_user"); 
+  if(!activeUser){ alert("Nessun utente selezionato."); return; } 
+  let all = JSON.parse(localStorage.getItem("akc_group")||"{}"); 
+  let userData = all[activeUser]; 
+  if(!userData || Object.keys(userData).length === 0){ alert("Nessun dato."); return; } 
+  let blob = new Blob([JSON.stringify(userData, null, 2)], {type:"application/json"}); 
+  let a = document.createElement("a"); 
+  a.href = URL.createObjectURL(blob); 
+  a.download = "checklist_"+activeUser+".json"; 
+  a.click(); 
+}
+
+function analyzeGroup(){ 
+  let all = JSON.parse(localStorage.getItem("akc_group")||"{}"); 
+  let counts = {}; 
+  Object.values(all).forEach(list=>{ 
+    Object.keys(list).forEach(k=>{ 
+      let isExcluded = false; 
+      for(let cat of EXCLUDED_FROM_ANALYSIS){ 
+        if(k.startsWith(cat+"_")){ isExcluded = true; break; } 
+      } 
+      if(!isExcluded && list[k] === true){ counts[k] = (counts[k]||0)+1; } 
+    }); 
+  }); 
+  let result = "📊 ANALISI DOPPIONI (escluse base)\n\n"; 
+  let found = false; 
+  Object.keys(counts).forEach(k=>{ 
+    if(counts[k] > 1){ result += "⚠️ " + k.replaceAll("_"," ") + " ("+counts[k]+" utenti)\n"; found = true; } 
+  }); 
+  if(!found) result += "✅ Nessun doppione!"; 
+  alert(result); 
+}
+
+function updateActiveUserLabel(){
+  let active = localStorage.getItem("active_user");
+  let el = document.getElementById("active_user_label");
+  if(!el) return;
+  el.innerText = active ? "👤 Utente attivo: " + active : "👤 Nessun utente selezionato";
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  updateActiveUserLabel();
+  let topBar = document.createElement("div"); 
+  topBar.style.margin = "10px 0"; 
+  topBar.style.display = "flex"; 
+  topBar.style.flexWrap = "wrap"; 
+  topBar.style.alignItems = "center"; 
+  topBar.style.gap = "8px";
+  let addBtn = document.createElement("button"); 
+  addBtn.innerHTML = '<i data-lucide="user-plus"></i> Nuovo Utente'; 
+  addBtn.onclick = addUser;
+  let analyzeBtn = document.createElement("button"); 
+  analyzeBtn.innerHTML = '<i data-lucide="bar-chart-2"></i> Analisi (no base)'; 
+  analyzeBtn.onclick = analyzeGroup;
+  let exportUserBtn = document.createElement("button"); 
+  exportUserBtn.innerHTML = '<i data-lucide="download"></i> Esporta Utente'; 
+  exportUserBtn.onclick = exportUserData;
+  let userUI = document.createElement("div"); 
+  userUI.id = "user_ui"; 
+  userUI.style.display = "flex"; 
+  userUI.style.flexWrap = "wrap"; 
+  userUI.style.alignItems = "center"; 
+  userUI.style.gap = "6px";
+  topBar.appendChild(addBtn); 
+  topBar.appendChild(analyzeBtn); 
+  topBar.appendChild(exportUserBtn); 
+  topBar.appendChild(userUI);
+  document.body.insertBefore(topBar, document.getElementById("app"));
+  renderUserUI();
+  renderSavedRoutesList();
+  loadEmergencyContacts();
+  if(window.lucide) lucide.createIcons();
+  
+  // Nascondi la sezione mappa all'inizio
+  const routeSection = document.getElementById("routeSection");
+  if(routeSection) routeSection.style.display = "none";
+});
+</script>
+</body>
+</html>
