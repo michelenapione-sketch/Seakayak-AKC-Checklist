@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sea Kayak Check-list AKC PRO v2</title>
+<style>
+:root{--akc-blue:#0369a1;}
+
+body {font-family:Arial;background:#e6edf5;color:#0f172a;margin:0;padding:10px;}
+.header{text-align:center;margin-bottom:10px;}
+.header img{max-width:120px;}
+h1{margin:5px 0;font-size:20px;}
+.section{background:#fff;margin-bottom:10px;border-radius:12px;overflow:hidden;box-shadow:0 2px 6px rgba(0,0,0,0.1);}
+.section-header{padding:12px;font-weight:bold;cursor:pointer;background:#cbd5e1;color:var(--akc-blue);}
+.section-content{display:none;padding:10px;background:#f1f5f9;}
+.item-row{display:flex;justify-content:space-between;margin:5px 0;}
+label.main{flex:1;}
+.pos{display:flex;gap:4px;}
+.pos label{font-size:10px;border:1px solid #999;border-radius:4px;padding:2px;display:flex;flex-direction:column;align-items:center;}
+.pos input{margin-bottom:2px;}
+input, textarea{width:100%;margin:3px 0;padding:5px;border-radius:5px;border:1px solid #ccc;}
+button{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:8px 10px;
+  margin:4px;
+  border-radius:8px;
+  border:1px solid var(--akc-blue);
+  background:white;
+  color:var(--akc-blue);
+  font-size:13px;
+  cursor:pointer;
+  transition:all 0.2s ease;
+}
+button:hover{
+  background:var(--akc-blue);
+  color:white;
+}
+button i{
+  width:16px;
+  height:16px;
+}
+.day{background:#e2e8f0;padding:8px;margin-top:5px;border-radius:8px;}
+.meal{font-size:12px;margin-top:6px;font-weight:bold;}
+.footer{margin-top:15px;font-size:12px;text-align:center;color:#334155;}
+
+@media print {
+ body {background:white;color:black;}
+ button {display:none;}
+ .section {box-shadow:none;border:1px solid #ccc;}
+ .section-content {display:block !important;}
+}
+
+.section-header i {
+  width:18px;
+  height:18px;
+  margin-right:8px;
+  stroke:var(--akc-blue);
+}
+
+</style>
+<link rel="manifest" href="manifest.json?v=2">
+<script src="https://unpkg.com/lucide@latest">
+// 🌍 GPS + MAPPA
+function initMap(lat, lon){
+  document.getElementById("map").style.display = "block";
+
+  if(mapInstance){
+    mapInstance.remove();
+  }
+  mapInstance = L.map('map').setView([lat, lon], 10);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap'
+  }).addTo(mapInstance);
+
+  L.marker([lat, lon]).addTo(mapInstance)
+    .bindPopup("Sei qui")
+    .openPopup();
+}
+
+let mapVisible = false;
+let mapInstance = null;
+
+function getLocation(){
+  if(mapVisible){
+    document.getElementById("map").style.display = "none";
+    document.getElementById("gps").innerHTML = "";
+    mapVisible = false;
+    return;
+  }
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(pos=>{
+      let lat = pos.coords.latitude;
+      let lon = pos.coords.longitude;
+
+      document.getElementById("gps").innerHTML =
+        "📍 Lat: "+lat.toFixed(5)+" | Lon: "+lon.toFixed(5);
+
+      initMap(lat, lon);
+      mapVisible = true;
+
+    }, ()=>{
+      alert("GPS non disponibile");
+    });
+  }
+}
+
+</script>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js">
+// 🌍 GPS + MAPPA
+function initMap(lat, lon){
+  document.getElementById("map").style.display = "block";
+
+  if(mapInstance){
+    mapInstance.remove();
+  }
+  mapInstance = L.map('map').setView([lat, lon], 10);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap'
+  }).addTo(mapInstance);
+
+  L.marker([lat, lon]).addTo(mapInstance)
+    .bindPopup("Sei qui")
+    .openPopup();
+}
+
+let mapVisible = false;
+let mapInstance = null;
+
+function getLocation(){
+  if(mapVisible){
+    document.getElementById("map").style.display = "none";
+    document.getElementById("gps").innerHTML = "";
+    mapVisible = false;
+    return;
+  }
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(pos=>{
+      let lat = pos.coords.latitude;
+      let lon = pos.coords.longitude;
+
+      document.getElementById("gps").innerHTML =
+        "📍 Lat: "+lat.toFixed(5)+" | Lon: "+lon.toFixed(5);
+
+      initMap(lat, lon);
+      mapVisible = true;
+
+    }, ()=>{
+      alert("GPS non disponibile");
+    });
+  }
+}
+
+</script>
+
+</head>
+<body>
+
+<div class="header">
+<img src="icon-192-v3.png" style="width:120px;">
+<h1>Sea Kayak Check-list AKC PRO</h1>
+</div>
+
+<div>
+<button onclick="saveData()"><i data-lucide="save"></i>Salva</button>
+<button onclick="resetData()"><i data-lucide="rotate-ccw"></i>Reset</button>
+<button onclick="printChecklist()"><i data-lucide="printer"></i>Stampa</button>
+<button onclick="shareChecklist()"><i data-lucide="share-2"></i>Condividi</button>
+<button onclick="exportData()"><i data-lucide="upload"></i>Esporta</button>
+<input type="file" id="importFile" style="display:none" onchange="importData(event)">
+<button onclick="document.getElementById('importFile').click()"><i data-lucide="download"></i>Importa</button>
+<button onclick="window.open('https://www.windy.com', '_blank')"><i data-lucide="wind"></i>Windy</button>
+
+
+
+<button onclick="getLocation()"><i data-lucide="map-pin"></i>GPS</button>
+<div id="gps" style="margin:5px 0;"></div>
+<div id="map" style="height:300px;border-radius:10px;margin-top:10px;"></div>
+
+</div>
+
+<div style="margin:10px 0; display:flex; gap:10px;">
+
+  <input id="user_name" placeholder="Nome utilizzatore">
+  <input id="kayak_type" placeholder="Tipo di kayak">
+</div>
+
+<div id="app"></div>
+
+<div class="footer">
+Tutto il materiale che non deve bagnarsi deve essere riposto nelle apposite sacche stagne.
+</div>
+
+<script>
+
+const positions=["GA","PH","DH","GP"];
+
+// 🎨 ICONE SEZIONI
+const icons = {
+ "EQUIPAGGIAMENTO INDOSSATO":"<i data-lucide='user'></i>",
+ "PONTE KAYAK":"<i data-lucide='anchor'></i>",
+ "SISTEMA NOTTE":"<i data-lucide='moon'></i>",
+ "VESTITI DI RICAMBIO":"<i data-lucide='shirt'></i>",
+ "CUCINA":"<i data-lucide='flame'></i>",
+ "SISTEMA ACQUA":"<i data-lucide='droplet'></i>",
+ "SICUREZZA":"<i data-lucide='life-buoy'></i>",
+ "SISTEMA FUOCO / ATTREZZI":"<i data-lucide='flame'></i>",
+ "CIBO":"<i data-lucide='utensils'></i>",
+ "METEO":"<i data-lucide='cloud-sun'></i>",
+ "ALTRO":"<i data-lucide='plus'></i>",
+ "KIT PRIMO SOCCORSO":"<i data-lucide='heart-pulse'></i>",
+ "KIT IGIENE":"<i data-lucide='droplets'></i>",
+ "KIT RIPARAZIONE KAYAK":"<i data-lucide='wrench'></i>",
+ "KIT RIPARAZIONE OGGETTI":"<i data-lucide='settings'></i>",
+ "GAVONI":"<i data-lucide='package'></i>",
+ "NOTE":"<i data-lucide='notebook'></i>",
+ "LEGENDA":"<i data-lucide='book-open'></i>"
+};
+
+
+const data={
+"EQUIPAGGIAMENTO INDOSSATO":["PFD","Paraspruzzi","Muta stagna / Neoprene","Sottomuta","Calzari","Guanti o Moffole","Coltello rescue","Orologio","Fischietto","InReach","VHF","Leash pagaia","Occhiali da sole","Cappello con visiera","Snack"],
+"PONTE KAYAK":["Pagaia principale","Pagaia di rispetto","Pompa di sentina/Sassola","Spugna","Paddle float","Cima traino","Contact line","Casco","Bussola","Carta nautica","Corno da nebbia"],
+"SISTEMA NOTTE":["Tenda/Tarp","Cordini","Pali","Picchetti","Materassino","Sacco a pelo","Cuscino","Bivi bag","Sacco letto"],
+"VESTITI DI RICAMBIO":["Intimo","Baselayer","Midlayer","Giacca calda","Calze","Cappello di lana","Guanti di lana","Scarpe"],
+"CUCINA":["Fornellino","Pentola","Posate","Tazza","Caffettiera","Carburante fornello","Spugna pulizia"],
+"SISTEMA ACQUA":["Taniche","Borracce","Filtro acqua","Pastiglie purificatrici","Camel bag"],
+"SICUREZZA":["Kit primo soccorso","Kit Igiene","Telefono in sacca stagna","Kit riparazione kayak","Kit riparazione oggetti","Luce frontale","Luci navigazione notturna","Power bank","Batterie","Cavi ricarica","Leatherman o Victorinox","Accendino","Crema solare","Sacchetti robusti","Sacche stagne","Poncho","Carta Igienica","Sapone Biodegradabile","Asciugamani"],
+"SISTEMA FUOCO / ATTREZZI":["Segaccio","Accetta","Acciarino","Inneschi","Coltello","Paletta"]
+};
+
+function loadData(){return JSON.parse(localStorage.getItem("checklist"))||{};}
+
+// 🔥 AUTOSAVE SU INPUT (fix CIBO/METEO)
+document.addEventListener("input", function(e){
+  let stored = JSON.parse(localStorage.getItem("checklist")) || {};
+  if(e.target && e.target.id){
+    stored[e.target.id] = e.target.type==="checkbox" ? e.target.checked : e.target.value;
+    localStorage.setItem("checklist", JSON.stringify(stored));
+  }
+});
+
+
+function saveData(){
+ let existing = JSON.parse(localStorage.getItem("checklist")) || {};
+ let saved={...existing};
+
+ document.querySelectorAll("input,textarea").forEach(i=>{
+  saved[i.id]= i.type==="checkbox"? i.checked : i.value;
+ });
+
+ localStorage.setItem("checklist",JSON.stringify(saved));
+ alert("Salvato 👍");
+}
+
+function resetData(){
+ if(confirm("Vuoi resettare tutto?")){
+  localStorage.clear();
+  location.reload();
+ }
+}
+
+function toggle(el){
+ let c=el.nextElementSibling;
+ c.style.display=c.style.display==="block"?"none":"block";
+}
+
+function renderSection(app,name,items,saved){
+ let div=document.createElement("div");div.className="section";
+ let h=document.createElement("div");h.className="section-header";h.innerHTML=(icons[name] ? icons[name]+" " : "") + name;h.onclick=()=>toggle(h);
+ div.appendChild(h);
+ let c=document.createElement("div");c.className="section-content";
+
+ items.forEach(item=>{
+  let row=document.createElement("div");row.className="item-row";
+  let label=document.createElement("label");label.className="main";
+  let id=name+"_"+item;
+
+  let cb=document.createElement("input");cb.type="checkbox";cb.id=id;
+  if(saved[id])cb.checked=true;
+  label.appendChild(cb);label.append(" "+item);
+
+  let pos=document.createElement("div");pos.className="pos";
+  positions.forEach(p=>{
+    let pid=id+"_"+p;
+    let pl=document.createElement("label");
+    let pcb=document.createElement("input");pcb.type="checkbox";pcb.id=pid;
+    if(saved[pid])pcb.checked=true;
+
+    // 🔥 esclusività GA PH DH GP
+    pcb.addEventListener("change", function(){
+      if(this.checked){
+        positions.forEach(other=>{
+          if(other !== p){
+            let otherId = id + "_" + other;
+            let otherCb = document.getElementById(otherId);
+            if(otherCb) otherCb.checked = false;
+          }
+        });
+      }
+    });
+
+    pl.appendChild(pcb);
+    let t=document.createElement("span");t.innerText=p;
+    pl.appendChild(t);
+    pos.appendChild(pl);
+  });
+
+  row.appendChild(label);
+  row.appendChild(pos);
+
+  // ❌ delete button
+  let del = document.createElement("button");
+  del.innerText="❌";
+  del.style.background="red";
+  del.style.marginLeft="5px";
+  del.style.padding="2px 6px";
+  del.style.fontSize="10px";
+  del.style.borderRadius="4px";
+
+  del.onclick=function(){
+    let stored = JSON.parse(localStorage.getItem("checklist")) || {};
+    let key = name+"_ALTRO";
+    let items = JSON.parse(stored[key]||"[]");
+    items = items.filter(x=>x!==it);
+    stored[key]=JSON.stringify(items);
+    localStorage.setItem("checklist",JSON.stringify(stored));
+    render();
+if (window.lucide) { lucide.createIcons(); }
+  openSectionByName(name);
+  };
+
+  row.appendChild(del);
+  c.appendChild(row);
+ });
+
+ 
+
+// 🔥 ALTRO per sezione (PRO)
+let stored = JSON.parse(localStorage.getItem("checklist")) || {};
+let keyExtra = name+"_ALTRO";
+let itemsExtra = [];
+
+if(stored[keyExtra]){
+  try{ itemsExtra = JSON.parse(stored[keyExtra]); }catch(e){}
+}
+
+// 🔥 render elementi extra SOPRA
+itemsExtra.forEach(it=>{
+  let row=document.createElement("div");row.className="item-row";
+  let label=document.createElement("label");label.className="main";
+
+  let id=name+"_ALTRO_"+it;
+
+  let cb=document.createElement("input");cb.type="checkbox";cb.id=id;
+  if(saved[id])cb.checked=true;
+
+  label.appendChild(cb);label.append(" "+it);
+
+  let pos=document.createElement("div");pos.className="pos";
+
+  positions.forEach(p=>{
+    let pid=id+"_"+p;
+    let pl=document.createElement("label");
+    let pcb=document.createElement("input");pcb.type="checkbox";pcb.id=pid;
+    if(saved[pid])pcb.checked=true;
+
+    pcb.addEventListener("change", function(){
+      if(this.checked){
+        positions.forEach(other=>{
+          if(other !== p){
+            let otherId = id + "_" + other;
+            let otherCb = document.getElementById(otherId);
+            if(otherCb) otherCb.checked = false;
+          }
+        });
+      }
+    });
+
+    pl.appendChild(pcb);
+    let t=document.createElement("span");t.innerText=p;
+    pl.appendChild(t);
+    pos.appendChild(pl);
+  });
+
+  row.appendChild(label);
+  row.appendChild(pos);
+
+  // ❌ delete button
+  let del = document.createElement("button");
+  del.innerText="❌";
+  del.style.background="red";
+  del.style.marginLeft="5px";
+  del.style.padding="2px 6px";
+  del.style.fontSize="10px";
+  del.style.borderRadius="4px";
+
+  del.onclick=function(){
+    let stored = JSON.parse(localStorage.getItem("checklist")) || {};
+    let key = name+"_ALTRO";
+    let items = JSON.parse(stored[key]||"[]");
+    items = items.filter(x=>x!==it);
+    stored[key]=JSON.stringify(items);
+    localStorage.setItem("checklist",JSON.stringify(stored));
+    render();
+if (window.lucide) { lucide.createIcons(); }
+  openSectionByName(name);
+  };
+
+  row.appendChild(del);
+  c.appendChild(row);
+});
+
+// 🔥 input aggiunta (UNO SOLO)
+let extraInput = document.createElement("input");
+extraInput.placeholder = "Aggiungi elemento...";
+
+let extraBtn = document.createElement("button");
+extraBtn.innerText = "Aggiungi";
+
+extraBtn.onclick = function(){
+
+  if(!extraInput.value) return;
+
+  // 🔥 salva stato attuale PRIMA del render
+  let current = {};
+  document.querySelectorAll("input,textarea").forEach(i=>{
+    current[i.id]= i.type==="checkbox"? i.checked : i.value;
+  });
+
+  let stored = JSON.parse(localStorage.getItem("checklist")) || {};
+  stored = {...stored, ...current};
+
+  let key = name+"_ALTRO";
+
+  let items = [];
+  if(stored[key]){
+    try{ items = JSON.parse(stored[key]); }catch(e){}
+  }
+
+  items.push(extraInput.value);
+  stored[key] = JSON.stringify(items);
+
+  localStorage.setItem("checklist", JSON.stringify(stored));
+
+  extraInput.value="";
+  render();
+if (window.lucide) { lucide.createIcons(); }
+  openSectionByName(name);
+};
+
+c.appendChild(extraInput);
+c.appendChild(extraBtn);
+
+div.appendChild(c);
+ app.appendChild(div);
+ return c;
+
+
+}
+
+function printChecklist(){window.print();}
+
+function render(){
+ const app=document.getElementById("app");
+ app.innerHTML="";
+ const saved=loadData();
+
+  // 🔥 ripristina nome e kayak
+  if(saved["user_name"]) document.getElementById("user_name").value = saved["user_name"];
+  if(saved["kayak_type"]) document.getElementById("kayak_type").value = saved["kayak_type"];
+
+
+ for(let s in data){
+  renderSection(app,s,data[s],saved);
+ }
+
+ 
+// CIBO (DINAMICO)
+let food=document.createElement("div");food.className="section";
+let fh=document.createElement("div");fh.className="section-header";fh.innerHTML=(icons["CIBO"]+" CIBO");fh.onclick=()=>toggle(fh);
+food.appendChild(fh);
+let fc=document.createElement("div");fc.className="section-content";
+
+let foodDays = saved["food_days"] || 1;
+
+function renderFoodDays(){
+ fc.innerHTML="";
+ for(let i=1;i<=foodDays;i++){
+  let d=document.createElement("div");d.className="day";
+
+  let header=document.createElement("div");
+  header.innerHTML="<b>Giorno "+i+"</b>";
+  header.style.cursor="pointer";
+
+  let content=document.createElement("div");
+  content.style.display="none";
+
+  header.onclick=()=>{
+    fc.querySelectorAll('.day > div:nth-child(2)').forEach(c=>{
+      if(c !== content) c.style.display = "none";
+    });
+    content.style.display = content.style.display==="block"?"none":"block";
+  };
+
+  let del=document.createElement("button");
+del.innerText="❌";
+del.style.fontSize="10px";
+del.style.marginLeft="10px";
+del.onclick=()=>{
+  let stored=loadData();
+  ["Colazione","Pranzo","Cena"].forEach(m=>{
+    delete stored["food_"+i+"_"+m];
+  });
+  stored["food_days"]=Math.max(1,(stored["food_days"]||1)-1);
+  localStorage.setItem("checklist",JSON.stringify(stored));
+  render();
+  openSectionByName("CIBO");
+  openSectionByName("METEO");
+  openSectionByName("CIBO");
+};
+header.appendChild(del);
+
+d.appendChild(header);
+
+  ["Colazione","Pranzo","Cena"].forEach(m=>{
+    let l=document.createElement("div");l.className="meal";l.innerText=m;
+    let inp=document.createElement("input");inp.id="food_"+i+"_"+m;
+    if(saved[inp.id])inp.value=saved[inp.id];
+    content.appendChild(l);content.appendChild(inp);
+  });
+
+  d.appendChild(content);
+  fc.appendChild(d);
+ }
+
+ let addBtn=document.createElement("button");
+ addBtn.innerText="➕ Aggiungi giorno";
+ addBtn.onclick=()=>{
+  let current = {};
+  document.querySelectorAll("input,textarea").forEach(i=>{
+    current[i.id]= i.type==="checkbox"? i.checked : i.value;
+  });
+
+  let stored = loadData();
+  stored = {...stored, ...current};
+
+  stored["food_days"] = (stored["food_days"] || 1) + 1;
+
+  localStorage.setItem("checklist", JSON.stringify(stored));
+
+  render();
+  openSectionByName("CIBO");
+  openSectionByName("CIBO");
+ };
+
+ fc.appendChild(addBtn);
+}
+
+renderFoodDays();
+food.appendChild(fc);
+app.appendChild(food);
+
+
+ 
+// METEO (DINAMICO)
+let met=document.createElement("div");met.className="section";
+let mh=document.createElement("div");mh.className="section-header";mh.innerHTML=(icons["METEO"]+" METEO");mh.onclick=()=>toggle(mh);
+met.appendChild(mh);
+let mc=document.createElement("div");mc.className="section-content";
+
+let meteoDays = saved["meteo_days"] || 1;
+
+function renderMeteoDays(){
+ mc.innerHTML="";
+ for(let i=1;i<=meteoDays;i++){
+  let d=document.createElement("div");d.className="day";
+
+  let header=document.createElement("div");
+  header.innerHTML="<b>Giorno "+i+"</b>";
+  header.style.cursor="pointer";
+
+  let content=document.createElement("div");
+  content.style.display="none";
+
+  header.onclick=()=>{
+    mc.querySelectorAll('.day > div:nth-child(2)').forEach(c=>{
+      if(c !== content) c.style.display = "none";
+    });
+    content.style.display = content.style.display==="block"?"none":"block";
+  };
+
+  let del=document.createElement("button");
+del.innerText="❌";
+del.style.fontSize="10px";
+del.style.marginLeft="10px";
+del.onclick=()=>{
+  let stored=loadData();
+  ["Mattina","Pomeriggio","Sera"].forEach(m=>{
+    delete stored["meteo_"+i+"_"+m];
+  });
+  stored["meteo_days"]=Math.max(1,(stored["meteo_days"]||1)-1);
+  localStorage.setItem("checklist",JSON.stringify(stored));
+  render();
+  openSectionByName("METEO");
+  openSectionByName("METEO");
+  openSectionByName("CIBO");
+};
+header.appendChild(del);
+
+d.appendChild(header);
+
+  ["Mattina","Pomeriggio","Sera"].forEach(m=>{
+    let l=document.createElement("div");l.className="meal";l.innerText=m;
+    let inp=document.createElement("input");inp.id="meteo_"+i+"_"+m;
+    if(saved[inp.id])inp.value=saved[inp.id];
+    content.appendChild(l);content.appendChild(inp);
+  });
+
+  d.appendChild(content);
+  mc.appendChild(d);
+ }
+
+ let addBtn=document.createElement("button");
+ addBtn.innerText="➕ Aggiungi giorno";
+ addBtn.onclick=()=>{
+  let current = {};
+  document.querySelectorAll("input,textarea").forEach(i=>{
+    current[i.id]= i.type==="checkbox"? i.checked : i.value;
+  });
+
+  let stored = loadData();
+  stored = {...stored, ...current};
+
+  stored["meteo_days"] = (stored["meteo_days"] || 1) + 1;
+
+  localStorage.setItem("checklist", JSON.stringify(stored));
+
+  render();
+  openSectionByName("METEO");
+  openSectionByName("METEO");
+  openSectionByName("CIBO");
+ };
+
+ mc.appendChild(addBtn);
+}
+
+renderMeteoDays();
+met.appendChild(mc);
+app.appendChild(met);
+
+
+ 
+// ALTRO
+let stored = JSON.parse(localStorage.getItem("checklist")) || {};
+let otherItems = [];
+
+if(stored["ALTRO_list"]){
+  try{
+    otherItems = JSON.parse(stored["ALTRO_list"]);
+  }catch(e){
+    otherItems = [];
+  }
+}
+
+renderSection(app,"ALTRO",otherItems,saved);
+renderSection(app,"KIT PRIMO SOCCORSO",[],saved);
+
+
+renderSection(app,"KIT IGIENE",[],saved);
+
+renderSection(app,"KIT RIPARAZIONE KAYAK",[],saved);
+
+renderSection(app,"KIT RIPARAZIONE OGGETTI",[],saved);
+
+// 🧭 GAVONI (FIX DEFINITIVO)
+let gavoni=document.createElement("div");gavoni.className="section";
+let gh=document.createElement("div");gh.className="section-header";gh.innerHTML=(icons["GAVONI"]+" GAVONI");gh.onclick=()=>toggle(gh);
+gavoni.appendChild(gh);
+let gc=document.createElement("div");gc.className="section-content";
+
+let map={
+ "GA":"GAVONE ANTERIORE (GA)",
+ "PH":"POCKET HATCH (PH)",
+ "DH":"DAY HATCH (DH)",
+ "GP":"GAVONE POSTERIORE (GP)"
+};
+
+for(let pos in map){
+
+  let sub=document.createElement("div");sub.className="section";
+
+  let sh=document.createElement("div");
+  sh.className="section-header";
+  sh.innerText=map[pos];
+  sh.onclick=()=>toggle(sh);
+
+  let sc=document.createElement("div");
+  sc.className="section-content";
+
+  Object.keys(saved).forEach(k=>{
+    if(k.endsWith("_"+pos) && saved[k]){
+      let baseKey = k.substring(0, k.lastIndexOf("_"+pos));
+      let item=document.createElement("div");
+      item.innerText="✔️ "+baseKey.replaceAll("_"," ");
+      sc.appendChild(item);
+    }
+  });
+
+  sub.appendChild(sh);
+  sub.appendChild(sc);
+  gc.appendChild(sub);
+}
+
+gavoni.appendChild(gc);
+app.appendChild(gavoni);
+
+// NOTE
+ let note=document.createElement("div");note.className="section";
+ let nh=document.createElement("div");nh.className="section-header";nh.innerHTML=(icons["NOTE"]+" NOTE");nh.onclick=()=>toggle(nh);
+ note.appendChild(nh);
+ let nc=document.createElement("div");nc.className="section-content";
+ let ta=document.createElement("textarea");ta.id="notes";
+ if(saved["notes"])ta.value=saved["notes"];
+ nc.appendChild(ta);
+ note.appendChild(nc);
+ app.appendChild(note);
+// LEGENDA
+let legenda=document.createElement("div");legenda.className="section";
+let lh=document.createElement("div");lh.className="section-header";lh.innerHTML=(icons["LEGENDA"]+" LEGENDA");lh.onclick=()=>toggle(lh);
+legenda.appendChild(lh);
+let lc=document.createElement("div");lc.className="section-content";
+lc.innerHTML = "GA = Gavone anteriore<br>PH = Poket Hatch<br>DH = Day Hatch<br>GP = Gavone posteriore";
+legenda.appendChild(lc);
+app.appendChild(legenda);
+
+}
+
+render();
+if (window.lucide) { lucide.createIcons(); }
+
+function shareChecklist() {
+
+  // 🔥 salva automaticamente tutto (anche input testo)
+  let saved = {};
+  document.querySelectorAll("input,textarea").forEach(i=>{
+    saved[i.id]= i.type==="checkbox"? i.checked : i.value;
+  });
+  localStorage.setItem("checklist",JSON.stringify(saved));
+
+  let text = "🛶 Sea Kayak Checklist AKC\n\n";
+
+  if(saved["user_name"]) text += "👤 " + saved["user_name"] + "\n";
+  if(saved["kayak_type"]) text += "🛶 Kayak: " + saved["kayak_type"] + "\n";
+
+  // CHECKBOX
+  for (let key in saved) {
+    if (saved[key] === true) {
+      text += "✔️ " + key.replaceAll("_"," ") + "\n";
+    }
+  }
+
+  // 🍝 CIBO
+  for (let i=1;i<=7;i++){
+    ["Colazione","Pranzo","Cena"].forEach(m=>{
+      let val = saved["food_"+i+"_"+m];
+      if(val){
+        text += "\n🍝 G"+i+" "+m+": "+val;
+      }
+    });
+  }
+
+  // 🌤️ METEO
+  for (let i=1;i<=7;i++){
+    ["Mattina","Pomeriggio","Sera"].forEach(m=>{
+      let val = saved["meteo_"+i+"_"+m];
+      if(val){
+        text += "\n🌤️ G"+i+" "+m+": "+val;
+      }
+    });
+  }
+
+  // ➕ ALTRO
+  if(saved["ALTRO_list"]){
+    let items = JSON.parse(saved["ALTRO_list"]);
+    items.forEach(i=>{
+      text += "\n➕ " + i;
+    });
+  }
+
+  // 💊 KIT
+  for(let i=1;i<=10;i++){
+    let val = saved["kit_"+i];
+    if(val){
+      text += "\n💊 " + val;
+    }
+  }
+
+  
+// 🧼 KIT IGIENE
+for(let i=1;i<=10;i++){
+  let val = saved["kit_igiene_"+i];
+  if(val){
+    text += "\n🧼 " + val;
+  }
+}
+
+// 🔧 KIT RIPARAZIONE KAYAK
+for(let i=1;i<=10;i++){
+  let val = saved["kit_kayak_"+i];
+  if(val){
+    text += "\n🛠️ " + val;
+  }
+}
+
+// 🔩 KIT RIPARAZIONE OGGETTI
+for(let i=1;i<=10;i++){
+  let val = saved["kit_oggetti_"+i];
+  if(val){
+    text += "\n🔩 " + val;
+  }
+}
+
+
+// 🔥 include ALTRO sezioni
+for(let key in saved){
+  if(key.endsWith("_ALTRO")){
+    try{
+      JSON.parse(saved[key]).forEach(i=>{
+        text += "\n➕ " + i;
+      });
+    }catch(e){}
+  }
+}
+
+// 📝 NOTE
+  if(saved["notes"]){
+    text += "\n\n📝 NOTE\n"+saved["notes"];
+  }
+
+  text += "\n\n🔗 App:\nhttps://michelenapione-sketch.github.io/Seakayak-AKC-Checklist/";
+
+  if (navigator.share) {
+    navigator.share({
+      title: "Checklist Kayak",
+      text: text
+    });
+  } else {
+    navigator.clipboard.writeText(text);
+    alert("Checklist copiata!");
+  }
+}
+
+
+function exportData(){
+
+  let stored = JSON.parse(localStorage.getItem("checklist")) || {};
+
+  let saved = {...stored};
+
+  document.querySelectorAll("input,textarea").forEach(i=>{
+    saved[i.id]= i.type==="checkbox"? i.checked : i.value;
+  });
+
+  // mantiene ALTRO_list
+  if(stored["ALTRO_list"]){
+    saved["ALTRO_list"] = stored["ALTRO_list"];
+  }
+
+  localStorage.setItem("checklist", JSON.stringify(saved));
+
+  let blob = new Blob([JSON.stringify(saved, null, 2)], {type:"application/json"});
+  let a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "checklist_kayak.json";
+  a.click();
+}
+
+function importData(event){
+  let file = event.target.files[0];
+  if(!file) return;
+
+  let reader = new FileReader();
+
+  reader.onload = function(e){
+    try{
+      let data = JSON.parse(e.target.result);
+      localStorage.setItem("checklist", JSON.stringify(data));
+      alert("Import completato 👍");
+      location.reload();
+    }catch(err){
+      alert("File non valido ❌");
+    }
+  };
+
+  reader.readAsText(file);
+}
+
+
+function openSectionByName(name){
+  document.querySelectorAll('.section').forEach(sec=>{
+    const header = sec.querySelector('.section-header');
+    const content = sec.querySelector('.section-content');
+    if(header && content){
+      if(header.innerText.includes(name)){
+        content.style.display = "block";
+      }
+    }
+  });
+}
+
+
+// 🌍 GPS + MAPPA
+function initMap(lat, lon){
+  document.getElementById("map").style.display = "block";
+
+  if(mapInstance){
+    mapInstance.remove();
+  }
+  mapInstance = L.map('map').setView([lat, lon], 10);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap'
+  }).addTo(mapInstance);
+
+  L.marker([lat, lon]).addTo(mapInstance)
+    .bindPopup("Sei qui")
+    .openPopup();
+}
+
+let mapVisible = false;
+let mapInstance = null;
+
+function getLocation(){
+  if(mapVisible){
+    document.getElementById("map").style.display = "none";
+    document.getElementById("gps").innerHTML = "";
+    mapVisible = false;
+    return;
+  }
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(pos=>{
+      let lat = pos.coords.latitude;
+      let lon = pos.coords.longitude;
+
+      document.getElementById("gps").innerHTML =
+        "📍 Lat: "+lat.toFixed(5)+" | Lon: "+lon.toFixed(5);
+
+      initMap(lat, lon);
+      mapVisible = true;
+
+    }, ()=>{
+      alert("GPS non disponibile");
+    });
+  }
+}
+
+</script>
+</body>
+</html>
